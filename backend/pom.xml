@@ -19,6 +19,7 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
+
         <!--解决提供可传递的易受攻击的依赖项 maven:org.yaml:snakeyaml:1.30警告-->
         <dependency>
             <groupId>org.yaml</groupId>
@@ -45,8 +46,8 @@
         <!--knife4j-->
         <dependency>
             <groupId>com.github.xiaoymin</groupId>
-            <artifactId>knife4j-spring-boot-starter</artifactId>
-            <version>3.0.3</version>
+            <artifactId>knife4j-openapi2-spring-boot-starter</artifactId>
+            <version>4.0.0</version>
         </dependency>
         <!--解决提供可传递的易受攻击的依赖项 maven:com.google.guava:guava:27.0.1-android警告-->
         <dependency>
@@ -152,7 +153,6 @@
             </dependency>
         </dependencies>
     </dependencyManagement>
-
     <build>
         <plugins>
             <plugin>
@@ -168,6 +168,7 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+                <version>${spring-boot.version}</version>
                 <configuration>
                     <mainClass>com.example.backend.BackendApplication</mainClass>
                     <skip>true</skip>
@@ -183,5 +184,4 @@
             </plugin>
         </plugins>
     </build>
-
 </project>
