@@ -13,4 +13,11 @@ public interface ComplainService {
     Integer batchDeleteComplains(List<String> complainIds);
 
     Integer update(Complain complain);
+
+    Complain selectById(Integer id);
+
+    Integer updateStatus(Integer id, String status);
+
+
+
 }

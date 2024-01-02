@@ -28,6 +28,12 @@ public class Complain {
     @TableField(value = "phone_number")
     private String phoneNumber;
 
+    @TableField(value = "personnel_name")
+    private String personnelName;
+
+    @TableField(value = "personnel_phone_number")
+    private String personnelPhoneNumber;
+
     @TableField(value = "status")
     private String status;
 
