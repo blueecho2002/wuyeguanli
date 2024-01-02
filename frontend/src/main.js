@@ -17,4 +17,8 @@ for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
 }
 
 app.provide('$axios',axios)
+//axios.defaults.headers.common['Accept'] = '/*/';
+//axios.defaults.headers.common['Content-Type'] = 'application/json';
+//每次请求在请求头中附带jwt令牌
+axios.defaults.headers['token'] = localStorage.getItem('token');
 app.mount('#app')

@@ -1,7 +1,7 @@
 package com.example.backend.interceptor;
 
 import com.alibaba.fastjson2.JSONObject;
-import com.example.backend.common.Result;
+import com.example.backend.pojo.Result;
 import com.example.backend.utils.JwtUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
