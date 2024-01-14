@@ -15,7 +15,7 @@ npm install
 npm run serve
 ```
 
-编译后访问http://localhost:8080/进入小区物业管理系统
+编译后访问 http://localhost:8080/ 进入小区物业管理系统
 
 ## 后端
 
