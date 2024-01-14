@@ -1,6 +1,7 @@
 package com.example.backend.service;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.example.backend.common.PageBean;
 import com.example.backend.pojo.Complain;
 
 import java.util.List;
@@ -13,4 +14,10 @@ public interface ComplainService {
     Integer batchDeleteComplains(List<String> complainIds);
 
     Integer update(Complain complain);
+
+    Complain selectById(Integer id);
+
+    Integer updateStatus(Integer id, String status);
+
+
 }

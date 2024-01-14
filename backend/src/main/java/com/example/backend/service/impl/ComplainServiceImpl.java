@@ -4,13 +4,16 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.example.backend.common.PageBean;
 import com.example.backend.mapper.ComplainMapper;
 import com.example.backend.pojo.Complain;
 import com.example.backend.service.ComplainService;
+import com.github.pagehelper.PageHelper;
 import org.apache.logging.log4j.util.Strings;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -54,5 +57,17 @@ public class ComplainServiceImpl extends ServiceImpl<ComplainMapper, Complain> i
         return complainMapper.updateById(complain);
     }
 
+    @Override
+    public Complain selectById(Integer id) {
+        return lambdaQuery().eq(Complain::getId, id).one();
+    }
+
+    @Override
+    public Integer updateStatus(Integer id, String status) {
+        Complain complain = new Complain();
+        complain.setId(id);
+        complain.setStatus(status);
+        return complainMapper.updateById(complain);
+    }
 
 }

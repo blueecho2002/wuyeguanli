@@ -20,6 +20,7 @@ public class LoginCheckInterceptor implements HandlerInterceptor {
 
         if(request.getMethod().equals("OPTIONS")){return true;}
 
+
         //获取请求头中的token
         String token = request.getHeader("token");
         log.info("从请求头中获取的令牌：{}",token);

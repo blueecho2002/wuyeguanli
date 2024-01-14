@@ -39,7 +39,7 @@ public class ParkingController {
     @GetMapping("/selectPark/{currentPage}/{pageSize}")
     public R<?> selectPark(@PathVariable Integer currentPage, @PathVariable Integer pageSize,
                            @RequestParam String name, @RequestParam String gender,
-                           @RequestParam String date1, @RequestParam String date2){
+                           @RequestParam(required = false) String date1, @RequestParam(required = false) String date2){
 
         IPage<Parking> page = parkingService.getPage(currentPage, pageSize,name, gender, date1, date2);
         //如果当前页码值大于了总页码值，就重新执行查询操作，使用最大页码值作为当前页码值
@@ -90,7 +90,7 @@ public class ParkingController {
         Owner owner = ownerService.getById(ownerId);
         Parking parking = new Parking();
         parking.setId(parkId);
-        parking.setGender(owner.getGender());
+        parking.setGender(owner.getSex());
         parking.setName(owner.getName());
         parking.setPhoneNumber(owner.getTelephone());
         parking.setUpdateTime(LocalDateTime.now());
@@ -118,7 +118,7 @@ public class ParkingController {
         Owner owner = ownerService.getById(ownerId);
         Parking parking = new Parking();
         parking.setId(parkId);
-        parking.setGender(owner.getGender());
+        parking.setGender(owner.getSex());
         parking.setName(owner.getName());
         parking.setPhoneNumber(owner.getTelephone());
         parking.setUpdateTime(LocalDateTime.now());

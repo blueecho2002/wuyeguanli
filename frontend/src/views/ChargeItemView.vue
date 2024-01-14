@@ -1,6 +1,5 @@
 <template>
   <div class="class">
-    <el-card shadow="always">
       <el-form style=" margin-left: 0;">
         <el-row>
           <el-form-item label="收费项目" style="margin-top: 20px;">
@@ -20,9 +19,6 @@
         <el-button @click="data.newItemDialogFormVisible = true" type="primary"
           style="margin-left: 50px; width: 100px; margin-left: 0;">新建收费项目</el-button>
 
-        <el-button @click="data.newItemDialogFormVisible = true" type="success"
-          style="margin-left: 50px; width: 100px; margin-left: 10px;">导出到Excel</el-button>
-
         <el-button @click="deleteSelectedRows" type="danger"
           style="margin-left: 50px; width: 100px; margin-left: 10px;">批量删除</el-button>
       </el-form>
@@ -33,10 +29,11 @@
         <el-table-column prop="money" label="费用(元)" width="120" />
         <el-table-column prop="unit" label="单位" width="120" />
         <el-table-column prop="period" label="收费周期" width="120" />
+        <el-table-column prop="updateTime" label="创建时间" width="180" />
         <el-table-column prop="updateTime" label="更新时间" width="180" />
         <el-table-column fixed="right" label="操作" width="200">
           <template #default="scope">
-            <el-button link type="primary" @click="editDetailFormLoad(scope.row)">
+            <el-button link type="primary" @click="editItemFormLoad(scope.row)">
               编辑
             </el-button>
             <el-button link type="danger" @click="deleteSingle(scope.row.id)">
@@ -45,41 +42,31 @@
           </template>
         </el-table-column>
       </el-table>
-      <el-pagination style="margin-top: 30px;" v-model:current-page="data.currentPage4" v-model:page-size="data.pageSize4"
+      <el-pagination style="margin-top: 30px;" v-model:current-page="data.currentPage" v-model:page-size="data.pageSize"
         :page-sizes="[10, 20, 50, 100]" layout="total, sizes, prev, pager, next, jumper" :total="data.totalItem"
         @size-change="getChargeItem()" @current-change="getChargeItem()" />
-    </el-card>
   </div>
 
-  <!-- 修改明细对话框 -->
-  <el-dialog v-model="data.editDetailDialogFormVisible" title="修改收费项目">
-    <!-- {{ editDetailForm.chargeItemId }} -->
-    <el-form :model="editDetailForm" :rules="rules" ref="editDetailFormRef">
-      <el-form-item label="收费项目" :label-width="formLabelWidth" prop="chargeItem">
-        <el-select v-model="editDetailForm.chargeItemId" placeholder="请选择收费项目" clearable>
-          <el-option v-for="item in data.options" :key="item.id" :label="item.name" :value="item.id" />
-        </el-select>
+  <!-- 修改收费项目对话框 -->
+  <el-dialog v-model="data.editItemDialogFormVisible" title="修改收费项目">
+    <el-form :model="editItemForm" :rules="rules" ref="editItemFormRef">
+      <el-form-item label="项目名称" :label-width="formLabelWidth" prop="name">
+        <el-input v-model="editItemForm.name" autocomplete="off" placeholder="请输入项目名称" />
       </el-form-item>
-      <el-form-item label="付款人ID" :label-width="formLabelWidth" prop="ownerId">
-        <el-input v-model="editDetailForm.ownerId" autocomplete="off" placeholder="请输入付款人ID" />
+      <el-form-item label="费用（元）" :label-width="formLabelWidth" prop="money">
+        <el-input v-model="editItemForm.money" autocomplete="off" placeholder="请输入项目费用" />
       </el-form-item>
-      <el-form-item label="应收金额" :label-width="formLabelWidth" prop="payMoney">
-        <el-input v-model="editDetailForm.payMoney" autocomplete="off" placeholder="请输入应收金额" />
+      <el-form-item label="单位" :label-width="formLabelWidth" prop="unit">
+        <el-input v-model="editItemForm.unit" autocomplete="off" placeholder="请输入单位，如：/平方米" />
       </el-form-item>
-      <el-form-item label="实收金额" :label-width="formLabelWidth" prop="actualMoney">
-        <el-input v-model="editDetailForm.actualMoney" autocomplete="off" placeholder="请输入实收金额" />
+      <el-form-item label="收费周期" :label-width="formLabelWidth" prop="period">
+        <el-input v-model="editItemForm.period" autocomplete="off" placeholder="请输入收费周期，如：每年" />
       </el-form-item>
-
-      <el-form-item label="缴费时间" :label-width="formLabelWidth" prop="payTime">
-        <el-date-picker v-model="editDetailForm.payTime" type="datetime" placeholder="Pick a Date"
-          format="YYYY/MM/DD HH:mm:ss" value-format="x" />
-      </el-form-item>
-
     </el-form>
     <template #footer>
       <span class="dialog-footer">
-        <el-button @click="data.editDetailDialogFormVisible = false">取消</el-button>
-        <el-button type="primary" @click="editDetail()">
+        <el-button @click="data.editItemDialogFormVisible = false">取消</el-button>
+        <el-button type="primary" @click="editItem()">
           确认
         </el-button>
       </span>
@@ -124,35 +111,27 @@ const axios = inject('$axios')
 const formLabelWidth = '140px'
 
 const rules = reactive({
-  chargeItem: [
-    //{ required: true, message: '请选择收费项目', trigger: 'change' },
+  money: [
+    { required: true, message: '请输入费用', trigger: 'change' },
+
   ],
-  ownerId: [
-    { required: true, message: '请输入付款人', trigger: 'blur' },
+  unit: [
+    //{ required: true, message: '请输入付款人', trigger: 'blur' },
   ],
-  payMoney: [
+  period: [
     { required: true, message: '请输入应收金额', trigger: 'blur' },
   ],
-  actualMoney: [
-    { required: true, message: '请输入实收金额', trigger: 'blur' },
-  ],
-  payTime: [
-    { required: true, message: '请选择缴费时间', trigger: 'blur' },
-  ],
+  name: [
+    { required: true, message: '请输入收费项目名称', trigger: 'blur' },
+  ]
 })
 
 
-const editDetailForm = reactive({
-  id: '',
-  chargeItemName: '',
-  chargeItemId: '',
-  ownerId: '',
-  owner: '',
-  payMoney: '',
-  actualMoney: '',
-  payTime: '',
-  createTime: '',
-  updateTime: '',
+const editItemForm = reactive({
+  name: '',
+  unit: '',
+  period: '',
+  money: 0,
 })
 
 const newChargeItemForm = reactive({
@@ -166,14 +145,14 @@ const newChargeItemForm = reactive({
 const data = reactive({
   hostname: 'localhost',
   totalItem: 0,
-  currentPage4: 1,
-  pageSize4: 10,
+  currentPage: 1,
+  pageSize: 10,
 
   date: '',//日期选择器日期
   chargeItemId: '',
   chargeItemName:'',
 
-  editDetailDialogFormVisible: false,
+  editItemDialogFormVisible: false,
   newItemDialogFormVisible: false,
 
   tableData: [],
@@ -181,7 +160,7 @@ const data = reactive({
 })
 
 const newChargeItemFormRef = ref();
-const editDetailFormRef = ref();
+const editItemFormRef = ref();
 const tableRef = ref();
 
 function deleteSingle(id){
@@ -194,7 +173,7 @@ function deleteSingle(id){
       type: 'warning',
     }
   ).then(() => {
-    deleteChargeDetail(id)
+    deleteChargeItem(id)
   }).catch(()=>{})
 }
 
@@ -211,31 +190,23 @@ function deleteSelectedRows() {
     const selectedRows = tableRef.value.getSelectionRows()
     console.log(selectedRows);
     selectedRows.forEach(element => {
-      deleteChargeDetail(element.id);
+      deleteChargeItem(element.id);
     });
-  }).then(() => {
-    deleteChargeDetail(id)
   }).catch(()=>{})
 
 }
 
-function editDetailFormLoad(row) {
+function editItemFormLoad(row) {
   console.log(row);
-  data.editDetailDialogFormVisible = true
-  editDetailForm.id = row.id;
-  editDetailForm.chargeItemName = row.chargeItemName;
-  editDetailForm.chargeItemId = row.chargeItemId;
-  editDetailForm.owner = row.owner;
-  editDetailForm.payMoney = row.payMoney;
-  editDetailForm.actualMoney = row.actualMoney;
-  editDetailForm.payTime = row.payTime;
-  editDetailForm.ownerId = row.ownerId;
-  editDetailForm.createTime = row.createTime;
-  editDetailForm.updateTime = null;
+  editItemForm.money = row.money;
+  editItemForm.name = row.name;
+  editItemForm.period = row.period;
+  editItemForm.unit = row.unit;
+  data.editItemDialogFormVisible = true;
 }
 
 function reset() {
-  data.chargeItem = '';
+  data.chargeItemName = '';
   data.ownerId = '';
   data.owner = '';
   data.date = '';
@@ -284,24 +255,17 @@ function addChargeItem() {
 
 }
 
-function editDetail() {
-  editDetailFormRef.value.validate((valid) => {
+function editItem() {
+  editItemFormRef.value.validate((valid) => {
     if (valid) {
       axios({
         method: 'post',
-        url: 'http://' + data.hostname + ':8081/editChargeDetail',
+        url: 'http://' + data.hostname + ':8081/editChargeItem',
         data: {
-          id: editDetailForm.id,
-          owner: editDetailForm.owner,
-          ownerId: editDetailForm.ownerId,
-          payMoney: editDetailForm.payMoney,
-          actualMoney: editDetailForm.actualMoney,
-          createTime: editDetailForm.to_time,
-          updateTime: editDetailForm.teacher,
-          payTime: newChargeItemForm.payTime,
-          chargeItemName: editDetailForm.chargeItemName,
-          chargeItemId: editDetailForm.chargeItemId,
-          payTime: editDetailForm.payTime,
+          name:editItemForm.name,
+          period:editItemForm.period,
+          money:editItemForm.money,
+          unit:editItemForm.unit,
         }
       }).then(function (response) {
         if (response.data.code == 1) {
@@ -320,7 +284,7 @@ function editDetail() {
       }).catch(function (error) {
         console.log(error);
       })
-      data.editDetailDialogFormVisible = false;
+      data.editItemDialogFormVisible = false;
     } else {
       ElMessage({
         type: 'error',
@@ -332,10 +296,10 @@ function editDetail() {
 
 }
 
-function deleteChargeDetail(id) {
+function deleteChargeItem(id) {
     axios({
       method: 'delete',
-      url: 'http://' + data.hostname + ':8081/deleteChargeDetail/' + id,
+      url: 'http://' + data.hostname + ':8081/deleteChargeItem/' + id,
     }).then(function (response) {
       if (response.data.code == 1) {
         ElMessage({
@@ -360,8 +324,8 @@ function getChargeItem() {
     method: 'get',
     url: 'http://'+data.hostname+':8081/getChargeItem',
     params: {
-      page: data.currentPage4,
-      pageSize: data.pageSize4,
+      page: data.currentPage,
+      pageSize: data.pageSize,
       chargeItemName: data.chargeItemName,
       chargeItemId: data.chargeItemId,
       from_time: data.date == null ? null : data.date[0],

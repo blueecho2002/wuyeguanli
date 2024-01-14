@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.backend.mapper.ChargeItemMapper">
+
+    <select id="getChargeItem" resultType="com.example.backend.pojo.ChargeItem">
+        select * from charge_item
+        <where>
+            <if test="chargeItemName != null and chargeItemName != ''">
+                name like concat('%',#{chargeItemName},'%')
+            </if>
+            <if test="chargeItemId != null and chargeItemId != ''">
+                and id = #{chargeItemId}
+            </if>
+            <if test="from_time != null and to_time != null">
+                and update_time &gt;= #{from_time} and update_time &lt;= #{to_time}
+            </if>
+        </where>
+    </select>
+
+</mapper>

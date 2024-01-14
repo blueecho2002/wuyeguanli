@@ -47,7 +47,7 @@ public class RepairController {
     public R<?> selectRepairs(@PathVariable Integer currentPage, @PathVariable Integer pageSize,
                               @RequestParam String houseId,@RequestParam String serviceName,
                               @RequestParam String name, @RequestParam String personnelName,@RequestParam String status,
-                                @RequestParam String date1, @RequestParam String date2){
+                              @RequestParam(required = false) String date1, @RequestParam(required = false) String date2){
         IPage<Repair> page =repairService.getPage(currentPage, pageSize,houseId, serviceName, name, personnelName, status, date1, date2);
 
         //如果当前页码值大于了总页码值，就重新执行查询操作，使用最大页码值作为当前页码值

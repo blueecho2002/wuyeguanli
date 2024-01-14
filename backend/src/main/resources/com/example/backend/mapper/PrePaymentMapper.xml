@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.backend.mapper.PrePaymentMapper">
+
+    <select id="getPrePayment" resultType="com.example.backend.pojo.PrePayment">
+        select owner_id as id,name as owner,owner.telephone as telephone, pre_payment.update_time as updateTime,balance from pre_payment join owner on pre_payment.owner_id = owner.id
+        <where>
+            <if test="ownerName != null and ownerName != ''">
+                name like concat('%',#{ownerName},'%')
+            </if>
+            <if test="ownerId != null and ownerId != ''">
+                and id = #{ownerId}
+            </if>
+            <if test="from_time != null and to_time != null">
+                and pre_payment.update_time &gt;= #{from_time} and pre_payment.update_time &lt;= #{to_time}
+            </if>
+        </where>
+    </select>
+
+</mapper>

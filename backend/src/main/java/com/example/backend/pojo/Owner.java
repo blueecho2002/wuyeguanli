@@ -6,7 +6,9 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
+import org.apache.logging.log4j.core.config.plugins.validation.constraints.Required;
 
+import javax.persistence.Transient;
 import java.time.LocalDateTime;
 import java.util.Date;
 
@@ -25,8 +27,8 @@ public class Owner {
     @TableField(value = "telephone")
     private String telephone;
 
-    @TableField(value = "gender")
-    private String gender;
+    @TableField(value = "sex")
+    private String sex;
 
     @TableField(value = "type")
     private String type;
@@ -44,4 +46,6 @@ public class Owner {
     @TableField(value = "update_time")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime updateTime;
+
+
 }

@@ -1,51 +1,6 @@
 <template>
     <el-container>
-        <el-header style="text-align: right; font-size: 12px">
-            <div
-                style="height: 60px; background-color: #fff; display: flex; align-items: center; border-bottom: 1px solid #ddd">
-                <div style="flex: 1">
-                    <div style="padding-left: 20px; display: flex; align-items: center">
-                        <!-- <img src="" alt="" style="width: 40px"> -->
-                        <div style="font-weight: bold; font-size: 24px; margin-left: 5px">小区物业管理系统</div>
-                    </div>
-                </div>
-                <div style="width: fit-content; padding-right: 10px; display: flex; align-items: center;">
-                    <img src="https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png" alt=""
-                        style="width: 40px; height: 40px ;padding-right:10px;">
-
-                    <el-dropdown :hide-on-click="false">
-                        <span class="el-dropdown-link">
-                            管理员<el-icon class="el-icon--right"><arrow-down /></el-icon>
-                        </span>
-                        <template #dropdown>
-                            <el-dropdown-menu>
-                                <el-dropdown-item>退出登录</el-dropdown-item>
-                            </el-dropdown-menu>
-                        </template>
-                    </el-dropdown>
-
-                </div>
-            </div>
-        </el-header>
         <el-container>
-            <el-aside width="200px" style="background-color: rgb(238, 241, 246)">
-                <el-menu :default-openeds="['1', '3']">
-                    <el-submenu index="1">
-                        <template slot="title"><i class="el-icon-message"></i>小区业务管理</template>
-                        <el-menu-item-group>
-                            <router-link to="/repair">
-                                <el-menu-item index="1-1">设备维修管理</el-menu-item>
-                            </router-link>
-                            <router-link to="/park">
-                                <el-menu-item index="1-2">小区停车位管理</el-menu-item>
-                            </router-link>
-                            <router-link to="/complain">
-                                <el-menu-item index="1-3">住户投诉管理</el-menu-item>
-                            </router-link>
-                        </el-menu-item-group>
-                    </el-submenu>
-                </el-menu>
-            </el-aside>
             <el-main>
                 <div class="filter-container" style="display: flex; justify-content: space-between;height: 50px;">
                     <div>
@@ -65,7 +20,7 @@
 
                     <div class="block">
                         <el-date-picker v-model="pagination.date" type="daterange" range-separator="至"
-                            start-placeholder="开始日期" end-placeholder="结束日期" value-format="yyyy-MM-dd"></el-date-picker>
+                            start-placeholder="开始日期" end-placeholder="结束日期" value-format="YYYY-MM-DD"></el-date-picker>
                     </div>
 
                     <el-button type="primary" @click="getAll()" class="dalfBut">查询</el-button>
@@ -94,9 +49,9 @@
                     </el-table-column>
 
                     <el-table-column label="操作" width="300px" style="text-align: center;">
-                        <template slot-scope="scope">
-                            <el-button size="mini" type="primary" @click="editRow(scope.row)">修改车位分配</el-button>
-                            <el-button size="mini" type="danger" @click="deleteRow(scope.row)">删除</el-button>
+                        <template #default="scope">
+                            <el-button  type="primary" @click="editRow(scope.row)">修改车位分配</el-button>
+                            <el-button  type="danger" @click="deleteRow(scope.row)">删除</el-button>
                         </template>
                     </el-table-column>
                 </el-table>
@@ -109,7 +64,7 @@
                     </el-pagination>
                 </div>
 
-                <el-dialog title="添加车位信息" :visible.sync="dialogFormVisible" style="width: 1500px;">
+                <el-dialog title="添加车位信息" v-model="dialogFormVisible" style="width: 1500px;">
                     <el-form :model="form">
                         <el-form-item label="车位号" :label-width="formLabelWidth">
                             <el-select v-model="form.id" placeholder="请选择车位号" style="width: 500px;">
@@ -131,7 +86,7 @@
                     </div>
                 </el-dialog>
 
-                <el-dialog title="编辑投诉信息" :visible.sync="updateFormVisible" style="width: 1500px;">
+                <el-dialog title="编辑投诉信息" v-model="updateFormVisible" style="width: 1500px;">
                     <el-form :model="form">
                         <el-form-item label="车位号" :label-width="formLabelWidth">
                             <el-select v-model="form.id" placeholder="请选择车位号" style="width: 500px;" :disabled="true">
@@ -272,7 +227,7 @@ export default {
         // 处理学员更新的方法
         updatePark() {
 
-            axios.post(`http://localhost:8082/park/updatePark`, this.form, {
+            axios.post(`http://localhost:8081/park/updatePark`, this.form, {
                 headers: {
                     'Content-Type': 'application/json',
                 },
@@ -316,7 +271,7 @@ export default {
         },
         handleDelete(row) {
             // 在这里可以调用后端API删除学员
-            axios.delete(`http://localhost:8082/park/deleteParkById/` + row.id)
+            axios.delete(`http://localhost:8081/park/deleteParkById/` + row.id)
                 .then(response => {
                     // 处理删除成功的情况，可以更新前端UI，例如移除对应的行
                     // 实现真正的删除逻辑，从 tableData 数组中删除指定的行数据
@@ -334,20 +289,20 @@ export default {
         },
         fetchAllParking() {
             // 从服务器获取所有人员数据
-            axios.get("http://localhost:8082/park/selectPark").then((res) => {
+            axios.get("http://localhost:8081/park/selectPark").then((res) => {
                 this.allParking = res.data.data; // 假设响应包含人员数组
                 console.log(this.allPersons);
             });
         },
         fetchAllPersons() {
             // 从服务器获取所有人员数据
-            axios.get("http://localhost:8082/park/selectOwner").then((res) => {
+            axios.get("http://localhost:8081/park/selectOwner").then((res) => {
                 this.allPersons = res.data.data; // 假设响应包含人员数组
                 console.log(this.allParking);
             });
         },
         addPark() {
-            axios.post('http://localhost:8082/park/insertPark', this.form, {
+            axios.post('http://localhost:8081/park/insertPark', this.form, {
                 headers: {
                     'Content-Type': 'application/json',
                 },
@@ -388,7 +343,7 @@ export default {
             console.log('Form ID:', this.form.id);
             console.log('Discipline Score:', this.discipline.score);
 
-            const url = 'http://localhost:8082/student/disciplineStudent';
+            const url = 'http://localhost:8081/student/disciplineStudent';
 
             // 确保将'id'作为请求主体的一部分，而不是URL参数
             const data = {
@@ -429,7 +384,7 @@ export default {
 
 
             // 发送异步请求
-            axios.get("http://localhost:8082/park/selectPark/" + this.pagination.currentPage + '/' + this.pagination.pageSize + param).then((res) => {
+            axios.get("http://localhost:8081/park/selectPark/" + this.pagination.currentPage + '/' + this.pagination.pageSize + param).then((res) => {
                 this.pagination.pageSize = res.data.data.size;
                 this.pagination.currentPage = res.data.data.current;
                 this.pagination.total = res.data.data.total;
@@ -467,7 +422,7 @@ export default {
             // 在这里可以调用后端API执行批量删除
             const deleteIds = selectedRows.map(row => row.id);
 
-            axios.post('http://localhost:8082/park/batchDeleteParks', deleteIds)
+            axios.post('http://localhost:8081/park/batchDeleteParks', deleteIds)
                 .then(response => {
                     // 处理批量删除成功的情况
                     console.log('批量删除成功:', response.data);

@@ -1,113 +1,6 @@
 <template>
     <el-container>
-        <el-header style="text-align: right; font-size: 12px">
-            <div
-                style="height: 60px; background-color: #fff; display: flex; align-items: center; border-bottom: 1px solid #ddd">
-                <div style="flex: 1">
-                    <div style="padding-left: 20px; display: flex; align-items: center">
-                        <!-- <img src="" alt="" style="width: 40px"> -->
-                        <div style="font-weight: bold; font-size: 24px; margin-left: 5px">小区物业管理系统</div>
-                    </div>
-                </div>
-                <div style="width: fit-content; padding-right: 10px; display: flex; align-items: center;">
-                    <img src="https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png" alt=""
-                        style="width: 40px; height: 40px ;padding-right:10px;">
-
-                    <el-dropdown :hide-on-click="false">
-                        <span class="el-dropdown-link">
-                            管理员<el-icon class="el-icon--right"><arrow-down /></el-icon>
-                        </span>
-                        <template #dropdown>
-                            <el-dropdown-menu>
-                                <el-dropdown-item>退出登录</el-dropdown-item>
-                            </el-dropdown-menu>
-                        </template>
-                    </el-dropdown>
-
-                </div>
-            </div>
-        </el-header>
         <el-container>
-            <el-aside width="200px" style="background-color: rgb(238, 241, 246)">
-                <div style="width: 200px; border-right: 1px solid #ddd; min-height: calc(100vh - 60px)">
-                    <el-menu router style="border: none">
-                        <el-menu-item index="/home">
-                            <el-icon>
-                                <HomeFilled />
-                            </el-icon>
-                            <span>系统首页</span>
-                        </el-menu-item>
-                        <el-sub-menu index="2">
-                            <template #title>
-                                <el-icon>
-                                    <Money />
-                                </el-icon>
-                                <span>收费管理</span>
-                            </template>
-                            <el-menu-item index="/about">
-                                <el-icon>
-                                    <List />
-                                </el-icon>
-                                <span>收费明细</span>
-                            </el-menu-item>
-                            <el-menu-item index="/person">
-                                <el-icon>
-                                    <Files />
-                                </el-icon>
-                                <span>收费项目管理</span>
-                            </el-menu-item>
-                            <el-menu-item index="/person">
-                                <el-icon>
-                                    <Ticket />
-                                </el-icon>
-                                <span>预付款管理</span>
-                            </el-menu-item>
-                        </el-sub-menu>
-                        <el-menu-item index="/person">
-                            <el-icon>
-                                <ChatLineSquare />
-                            </el-icon>
-                            <span>住户投诉管理</span>
-                        </el-menu-item>
-                        <el-menu-item index="/person">
-                            <el-icon>
-                                <SuitcaseLine />
-                            </el-icon>
-                            <span>小区维修管理</span>
-                        </el-menu-item>
-                        <el-menu-item index="/person">
-                            <el-icon>
-                                <Van />
-                            </el-icon>
-                            <span>小区车位管理</span>
-                        </el-menu-item>
-                        <el-menu-item index="/person">
-                            <el-icon>
-                                <User />
-                            </el-icon>
-                            <span>住户管理</span>
-                        </el-menu-item>
-                        <el-menu-item index="/person">
-                            <el-icon>
-                                <Tickets />
-                            </el-icon>
-                            <span>物业资料管理</span>
-                        </el-menu-item>
-                        <el-menu-item index="/person">
-                            <el-icon>
-                                <Clock />
-                            </el-icon>
-                            <span>计量仪表管理</span>
-                        </el-menu-item>
-                        <el-menu-item index="login">
-                            <el-icon>
-                                <SwitchButton />
-                            </el-icon>
-                            <span>退出系统</span>
-                        </el-menu-item>
-                    </el-menu>
-                </div>
-            </el-aside>
             <el-main>
                 <div class="filter-container" style="display: flex; justify-content: space-between;height: 50px;">
                     <div>
@@ -147,7 +40,7 @@
                         <label>报修日期</label>
                         &ensp;
                         <el-date-picker v-model="pagination.date" type="daterange" range-separator="至"
-                            start-placeholder="开始日期" end-placeholder="结束日期" value-format="yyyy-MM-dd"></el-date-picker>
+                            start-placeholder="开始日期" end-placeholder="结束日期" value-format="YYYY-MM-DD"></el-date-picker>
                     </div>
 
                     <el-button type="primary" @click="getAll()" class="dalfBut">查询</el-button>
@@ -173,7 +66,7 @@
                     </el-table-column>
                     <el-table-column prop="name" label="报修人姓名" width="120">
                     </el-table-column>
-                    <el-table-column prop="phoneNumber" label="报修人姓名电话" width="120">
+                    <el-table-column prop="phoneNumber" label="报修人电话" width="120">
                     </el-table-column>
                     <el-table-column prop="personnelName" label="物业人员姓名" width="120">
                     </el-table-column>
@@ -187,10 +80,10 @@
                     </el-table-column>
 
                     <el-table-column label="操作" width="300px" style="text-align: center;">
-                        <template slot-scope="scope">
-                            <el-button size="mini" type="primary"
+                        <template #default="scope">
+                            <el-button  type="primary"
                                 @click="editRow(scope.row), fetchPersonnels()">分配业务人员</el-button>
-                            <el-button size="mini" type="danger" @click="deleteRow(scope.row)">删除</el-button>
+                            <el-button  type="danger" @click="deleteRow(scope.row)">删除</el-button>
                         </template>
                     </el-table-column>
                 </el-table>
@@ -203,7 +96,7 @@
                     </el-pagination>
                 </div>
 
-                <el-dialog title="添加维修信息" :visible.sync="dialogFormVisible" style="width: 1500px;">
+                <el-dialog title="添加维修信息" v-model="dialogFormVisible" style="width: 1500px;">
                     <el-form :model="form">
                         <el-form-item label="维修信息" :label-width="formLabelWidth">
                             <el-input v-model="form.description" autocomplete="off" style="width: 500px;"></el-input>
@@ -240,7 +133,7 @@
                 </el-dialog>
 
 
-                <el-dialog title="分配业务人员" :visible.sync="updateFormVisible" style="width: 1500px;">
+                <el-dialog title="分配业务人员" v-model="updateFormVisible" style="width: 1500px;">
                     <el-form :model="form">
                         <el-form-item label="物业人员" :label-width="formLabelWidth">
                             <el-select v-model="form.personnelId" placeholder="请选择物业人员" style="width: 500px;">
@@ -376,7 +269,7 @@ export default {
             if (this.form.houseId) {
                 // 发起异步请求获取设备数据，假设有一个名为 getDevicesByHouseId 的接口
                 // 你需要根据实际情况替换为实际的接口和参数
-                axios.get(`http://localhost:8082/repair/getDevicesByHouseId?houseId=${this.form.houseId}`)
+                axios.get(`http://localhost:8081/repair/getDevicesByHouseId?houseId=${this.form.houseId}`)
                     .then(response => {
                         this.devices = response.data.data;
                     })
@@ -390,7 +283,7 @@ export default {
         },
         fetchPersonnels() {
             // 异步请求获取物业人员列表
-            axios.get('http://localhost:8082/repair/selectPersonnel')
+            axios.get('http://localhost:8081/repair/selectPersonnel')
                 .then(response => {
                     this.personnels = response.data.data;
                 })
@@ -419,7 +312,7 @@ export default {
         // 处理学员更新的方法
         updateRepair() {
 
-            axios.post(`http://localhost:8082/repair/updateRepair`, this.form, {
+            axios.post(`http://localhost:8081/repair/updateRepair`, this.form, {
                 headers: {
                     'Content-Type': 'application/json',
                 },
@@ -463,7 +356,7 @@ export default {
         },
         handleDelete(row) {
             // 在这里可以调用后端API删除学员
-            axios.delete(`http://localhost:8082/repair/deleteRepairById/` + row.id)
+            axios.delete(`http://localhost:8081/repair/deleteRepairById/` + row.id)
                 .then(response => {
                     // 处理删除成功的情况，可以更新前端UI，例如移除对应的行
                     // 实现真正的删除逻辑，从 tableData 数组中删除指定的行数据
@@ -482,25 +375,25 @@ export default {
         },
         fetchAllParking() {
             // 从服务器获取所有人员数据
-            axios.get("http://localhost:8082/park/selectPark").then((res) => {
+            axios.get("http://localhost:8081/park/selectPark").then((res) => {
                 this.allParking = res.data.data; // 假设响应包含人员数组
                 console.log(this.allPersons);
             });
         },
         fetchAllPersons() {
             // 从服务器获取所有人员数据
-            axios.get("http://localhost:8082/park/selectOwner").then((res) => {
+            axios.get("http://localhost:8081/park/selectOwner").then((res) => {
                 this.allPersons = res.data.data; // 假设响应包含人员数组
                 console.log(this.allParking);
             });
         },
         fetchHouseIds() {
-            axios.get("http://localhost:8082/repair/selectHouseIds").then((res) => {
+            axios.get("http://localhost:8081/repair/selectHouseIds").then((res) => {
                 this.houseIds = res.data.data;
             });
         },
         addRepair() {
-            axios.post('http://localhost:8082/repair/insertRepair', this.form, {
+            axios.post('http://localhost:8081/repair/insertRepair', this.form, {
                 headers: {
                     'Content-Type': 'application/json',
                 },
@@ -539,7 +432,7 @@ export default {
             console.log('Form ID:', this.form.id);
             console.log('Discipline Score:', this.discipline.score);
 
-            const url = 'http://localhost:8082/student/disciplineStudent';
+            const url = 'http://localhost:8081/student/disciplineStudent';
 
             // 确保将'id'作为请求主体的一部分，而不是URL参数
             const data = {
@@ -591,7 +484,7 @@ export default {
             }
 
             // 发送异步请求
-            axios.get("http://localhost:8082/repair/selectRepairs/" + this.pagination.currentPage + '/' + this.pagination.pageSize + param).then((res) => {
+            axios.get("http://localhost:8081/repair/selectRepairs/" + this.pagination.currentPage + '/' + this.pagination.pageSize + param).then((res) => {
                 this.pagination.pageSize = res.data.data.size;
                 this.pagination.currentPage = res.data.data.current;
                 this.pagination.total = res.data.data.total;
@@ -630,7 +523,7 @@ export default {
             // 在这里可以调用后端API执行批量删除
             const deleteIds = selectedRows.map(row => row.id);
 
-            axios.post('http://localhost:8082/repair/batchDeleteRepair', deleteIds)
+            axios.post('http://localhost:8081/repair/batchDeleteRepair', deleteIds)
                 .then(response => {
                     // 处理批量删除成功的情况
                     console.log('批量删除成功:', response.data);

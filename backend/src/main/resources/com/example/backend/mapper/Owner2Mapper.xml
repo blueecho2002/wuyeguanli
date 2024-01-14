@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.backend.mapper.Owner2Mapper">
+    <select id="selectOwner" resultType="com.example.backend.pojo.Owner2">
+        select  o.id as id, o.name as name, o.id_card as idCard, o.telephone as telephone, o.profession as profession, o.sex as sex, o.type as type, o.remark as remark, o.birthday as birthday, h.name as room
+        from owner o ,owner_house_mapping ohm, house h
+        <where>
+            o.id = ohm.owner_id and h.id = ohm.house_id
+            <if test="name != null and name !=''">
+                and o.name like concat('%',#{name},'%')
+            </if>
+        </where>
+    </select>
+
+    <select id="groupOwner" resultType="com.example.backend.pojo.Owner2">
+        select  o.id as id, o.name as name, o.id_card as idCard, o.telephone as telephone, o.profession as profession, o.sex as sex, o.type as type, o.remark as remark, o.birthday as birthday, h.name as room
+        from owner o ,owner_house_mapping ohm, house h
+        where o.id = ohm.owner_id and h.id = ohm.house_id
+        order by h.name desc
+    </select>
+
+    <insert id="insertowner" useGeneratedKeys="true" keyProperty="id">
+        insert into owner(name, id_card, telephone, profession,
+                          sex, type, remark, birthday,
+                          create_time, update_time)
+            values (#{name},#{idCard},#{telephone},#{profession},
+                    #{sex},#{type},#{remark},#{birthday},
+                    #{createTime},#{updateTime})
+    </insert>
+</mapper>

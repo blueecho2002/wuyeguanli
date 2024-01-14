@@ -1,5 +1,6 @@
 package com.example.backend.service;
 
+import com.example.backend.common.PageBean;
 import com.example.backend.pojo.Owner;
 
 import java.util.List;
@@ -11,4 +12,5 @@ public interface OwnerService {
     Owner getById(Integer id);
 
     Owner selectById(Integer ownerId);
+
 }

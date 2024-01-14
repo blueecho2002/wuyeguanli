@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.backend.mapper.ChargeDetailMapper">
+
+    <select id="getChargeDetail" resultType="com.example.backend.pojo.ChargeDetail">
+        select charge_detail.*, owner.name as owner, charge_item.name as chargeItemName from charge_detail join owner on charge_detail.owner_id = owner.id join charge_item on charge_detail.charge_item_id = charge_item.id
+        <where>
+            <if test="ownerName != null and ownerName != ''">
+                owner.name like concat('%',#{ownerName},'%')
+            </if>
+            <if test="ownerId != null and ownerId != ''">
+                and owner.id = #{ownerId}
+            </if>
+            <if test="from_time != null and to_time != null">
+                and pay_time &gt;= #{from_time} and pay_time &lt;= #{to_time}
+            </if>
+            <if test="chargeItem != null and chargeItem != ''">
+                and charge_item.name like concat('%',#{chargeItem},'%')
+            </if>
+        </where>
+    </select>
+
+</mapper>

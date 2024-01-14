@@ -1,6 +1,5 @@
 <template>
   <div class="class">
-    <el-card shadow="always">
       <el-form style=" margin-left: 0;">
         <el-row>
           <el-form-item label="收费项目" prop="chargeItem" style="margin-top: 20px; padding-left: 0px; margin-left: 0px;">
@@ -26,18 +25,12 @@
         <el-button @click="data.newDetailDialogFormVisible = true" type="primary"
           style="margin-left: 50px; width: 100px; margin-left: 0;">新建收费明细</el-button>
 
-        <el-button @click="data.newDetailDialogFormVisible = true" type="primary"
-          style="margin-left: 50px; width: 100px; margin-left: 10px;">收费统计</el-button>
-
-        <el-button @click="data.newDetailDialogFormVisible = true" type="success"
-          style="margin-left: 50px; width: 100px; margin-left: 10px;">导出到Excel</el-button>
-
         <el-button @click="deleteSelectedRows" type="danger"
           style="margin-left: 50px; width: 100px; margin-left: 10px;">批量删除</el-button>
       </el-form>
       <el-table :data="data.tableData" style="margin-top: 30px;width: 1430px;" stripe ref="tableRef">
         <el-table-column type="selection" width="50" />
-        <el-table-column prop="id" label="#" width="120" />
+        <el-table-column prop="id" label="明细ID" width="120" />
         <el-table-column prop="chargeItemName" label="收费项目" width="200" />
         <el-table-column prop="ownerId" label="付款人ID" width="120" />
         <el-table-column prop="owner" label="付款人" width="120" />
@@ -59,7 +52,6 @@
       <el-pagination style="margin-top: 30px;" v-model:current-page="data.currentPage4" v-model:page-size="data.pageSize4"
         :page-sizes="[10, 20, 50, 100]" layout="total, sizes, prev, pager, next, jumper" :total="data.totalItem"
         @size-change="getChargeDetail()" @current-change="getChargeDetail()" />
-    </el-card>
   </div>
 
   <!-- 修改明细对话框 -->

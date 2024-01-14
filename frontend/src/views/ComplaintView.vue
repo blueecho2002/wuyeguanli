@@ -1,51 +1,7 @@
 <template>
     <el-container>
-        <el-header style="text-align: right; font-size: 12px">
-            <div
-                style="height: 60px; background-color: #fff; display: flex; align-items: center; border-bottom: 1px solid #ddd">
-                <div style="flex: 1">
-                    <div style="padding-left: 20px; display: flex; align-items: center">
-                        <!-- <img src="" alt="" style="width: 40px"> -->
-                        <div style="font-weight: bold; font-size: 24px; margin-left: 5px">小区物业管理系统</div>
-                    </div>
-                </div>
-                <div style="width: fit-content; padding-right: 10px; display: flex; align-items: center;">
-                    <img src="https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png" alt=""
-                        style="width: 40px; height: 40px ;padding-right:10px;">
-
-                    <el-dropdown :hide-on-click="false">
-                        <span class="el-dropdown-link">
-                            管理员<el-icon class="el-icon--right"><arrow-down /></el-icon>
-                        </span>
-                        <template #dropdown>
-                            <el-dropdown-menu>
-                                <el-dropdown-item>退出登录</el-dropdown-item>
-                            </el-dropdown-menu>
-                        </template>
-                    </el-dropdown>
-
-                </div>
-            </div>
-        </el-header>
         <el-container>
-            <el-aside width="200px" style="background-color: rgb(238, 241, 246)">
-                <el-menu :default-openeds="['1', '3']">
-                    <el-submenu index="1">
-                        <template slot="title"><i class="el-icon-message"></i>小区业务管理</template>
-                        <el-menu-item-group>
-                            <router-link to="/repair">
-                                <el-menu-item index="1-1">设备维修管理</el-menu-item>
-                            </router-link>
-                            <router-link to="/park">
-                                <el-menu-item index="1-2">小区停车位管理</el-menu-item>
-                            </router-link>
-                            <router-link to="/complain">
-                                <el-menu-item index="1-3">住户投诉管理</el-menu-item>
-                            </router-link>
-                        </el-menu-item-group>
-                    </el-submenu>
-                </el-menu>
-            </el-aside>
+
             <el-main>
                 <div class="filter-container" style="display: flex; justify-content: space-between;height: 50px;">
                     <div>
@@ -60,9 +16,8 @@
                     </div>
                     <div class="block">
                         <el-date-picker v-model="pagination.date" type="daterange" range-separator="至"
-                            start-placeholder="开始日期" end-placeholder="结束日期" value-format="yyyy-MM-dd"></el-date-picker>
+                            start-placeholder="开始日期" end-placeholder="结束日期" value-format="YYYY-MM-DD"></el-date-picker>
                     </div>
-
                     <el-button type="primary" @click="getAll()" class="dalfBut">查询</el-button>
                 </div>
                 <!-- </div> -->
@@ -84,6 +39,10 @@
                     </el-table-column>
                     <el-table-column prop="phoneNumber" label="投诉人电话">
                     </el-table-column>
+                    <el-table-column prop="personnelName" label="物业人员姓名" width="120">
+                    </el-table-column>
+                    <el-table-column prop="personnelPhoneNumber" label="物业人员电话" width="120">
+                    </el-table-column>
                     <el-table-column prop="status" label="状态">
                     </el-table-column>
                     <el-table-column prop="createTime" label="创建时间">
@@ -92,9 +51,11 @@
                     </el-table-column>
 
                     <el-table-column label="操作" width="300px" style="text-align: center;">
-                        <template slot-scope="scope">
-                            <el-button size="mini" type="primary" @click="editRow(scope.row)">编辑</el-button>
-                            <el-button size="mini" type="danger" @click="deleteRow(scope.row)">删除</el-button>
+                        <template #default="scope">
+                            <el-button  type="primary"
+                                @click="distributionRow(scope.row), fetchPersonnels()">分配物业人员</el-button>
+                            <el-button  type="primary" @click="editRow(scope.row)">编辑</el-button>
+                            <el-button  type="danger" @click="deleteRow(scope.row)">删除</el-button>
                         </template>
                     </el-table-column>
                 </el-table>
@@ -108,7 +69,7 @@
                 </div>
 
 
-                <el-dialog title="编辑投诉信息" :visible.sync="updateFormVisible" style="width: 1500px;">
+                <el-dialog title="编辑投诉信息" v-model="updateFormVisible" style="width: 1500px;">
                     <el-form :model="form">
                         <el-form-item label="投诉信息" :label-width="formLabelWidth">
                             <el-input v-model="form.description" autocomplete="off"></el-input>
@@ -136,6 +97,22 @@
                     <div slot="footer" class="dialog-footer">
                         <el-button @click="updateFormVisible = false">取 消</el-button>
                         <el-button type="primary" @click="updateFormVisible = false, updateComplaint()">更 改</el-button>
+                    </div>
+                </el-dialog>
+
+                <el-dialog title="分配业务人员" v-model="distributionFormVisible" style="width: 1500px;">
+                    <el-form :model="personnalId">
+                        <el-form-item label="物业人员" :label-width="formLabelWidth">
+                            <el-select v-model="personnalId" placeholder="请选择物业人员" style="width: 500px;">
+                                <el-option v-for="personnel in personnels" :key="personnel.id"
+                                    :label="`${personnel.id} - ${personnel.name}`" :value="personnel.id"></el-option>
+                            </el-select>
+                        </el-form-item>
+                    </el-form>
+                    <div slot="footer" class="dialog-footer">
+                        <el-button @click="distributionFormVisible = false">取 消</el-button>
+                        <el-button type="primary" @click="distributionFormVisible = false, updatePersonnel()">确
+                            定</el-button>
                     </div>
                 </el-dialog>
             </el-main>
@@ -205,6 +182,8 @@ export default {
             disciplineVisible: false,
             updateFormVisible: false,
             deleteVisible: false,
+            distributionFormVisible: false,
+            personnels: [],
             form: {
                 description: '',
                 name: '',
@@ -212,6 +191,7 @@ export default {
                 phoneNumber: '',
                 status: ''
             },
+            personnalId: '',
             discipline: {
                 score: ''
             },
@@ -234,6 +214,7 @@ export default {
         // 页面加载时自动查询学生数据
         // this.fetchStudentData();
         this.getAll();
+        this.fetchPersonnels();
     },
     methods: {
         handleSizeChange(pageSize) {
@@ -253,10 +234,58 @@ export default {
             // 显示更新学员对话框
             this.updateFormVisible = true;
         },
+        distributionRow(row) {
+            this.form = { ...row };
+            this.distributionFormVisible = true;
+        },
+        fetchPersonnels() {
+            // 异步请求获取物业人员列表
+            axios.get('http://localhost:8081/repair/selectPersonnel')
+                .then(response => {
+                    this.personnels = response.data.data;
+                })
+                .catch(error => {
+                    console.error('获取物业人员列表失败:', error);
+                });
+        },
+        //分配物业人员
+        updatePersonnel() {
+            // 确保 id 和 personnelId 不为空
+            if (!this.form.id || !this.personnalId) {
+                console.error('id 或 personnelId 为空');
+                return;
+            }
+
+            // 构建请求的数据对象
+            const data = {
+                id: this.form.id,
+                personnelId: this.personnalId,
+            };
+
+            // 发送请求
+            axios.post('http://localhost:8081/complain/updatePersonnel/', data)
+                .then(response => {
+                    console.log('物业人员分配成功:', response.data);
+                    // 显示成功的提示
+                    this.$message.success('物业人员分配成功');
+                    this.getAll();
+                })
+                .catch(error => {
+                    console.error('物业人员分配失败:', error);
+
+                    // 显示失败的提示
+                    this.$message.error('物业人员分配失败');
+                })
+                .finally(() => {
+                    // 关闭分配业务人员对话框
+                    this.distributionFormVisible = false;
+                });
+        }
+        ,
         // 处理学员更新的方法
         updateComplaint() {
             // 发送请求以使用更新后的表单数据更新学员
-            axios.put(`http://localhost:8082/complain/updateComplaint/${this.form.id}`, this.form, {
+            axios.post(`http://localhost:8081/complain/updateComplaint/${this.form.id}`, this.form, {
                 headers: {
                     'Content-Type': 'application/json',
                 },
@@ -299,7 +328,7 @@ export default {
         },
         handleDelete(row) {
             // 在这里可以调用后端API删除学员
-            axios.delete(`http://localhost:8082/complain/deleteComplainById/` + row.id)
+            axios.delete(`http://localhost:8081/complain/deleteComplainById/` + row.id)
                 .then(response => {
                     // 处理删除成功的情况，可以更新前端UI，例如移除对应的行
                     // 实现真正的删除逻辑，从 tableData 数组中删除指定的行数据
@@ -317,7 +346,7 @@ export default {
         },
         addStudent() {
             // 在这里调用后端接口
-            axios.post('http://localhost:8082/student/insertStudent', this.form, {
+            axios.post('http://localhost:8081/student/insertStudent', this.form, {
                 headers: {
                     'Content-Type': 'application/json',
                 },
@@ -353,7 +382,7 @@ export default {
             console.log('Form ID:', this.form.id);
             console.log('Discipline Score:', this.discipline.score);
 
-            const url = 'http://localhost:8082/student/disciplineStudent';
+            const url = 'http://localhost:8081/student/disciplineStudent';
 
             // 确保将'id'作为请求主体的一部分，而不是URL参数
             const data = {
@@ -394,7 +423,7 @@ export default {
 
 
             // 发送异步请求
-            axios.get("http://localhost:8082/complain/selectComplains/" + this.pagination.currentPage + '/' + this.pagination.pageSize + param).then((res) => {
+            axios.get("http://localhost:8081/complain/selectComplains/" + this.pagination.currentPage + '/' + this.pagination.pageSize + param).then((res) => {
                 this.pagination.pageSize = res.data.data.size;
                 this.pagination.currentPage = res.data.data.current;
                 this.pagination.total = res.data.data.total;
@@ -432,7 +461,7 @@ export default {
             // 在这里可以调用后端API执行批量删除
             const deleteIds = selectedRows.map(row => row.id);
 
-            axios.post('http://localhost:8082/complain/batchDeleteComplaints', deleteIds)
+            axios.post('http://localhost:8081/complain/batchDeleteComplaints', deleteIds)
                 .then(response => {
                     // 处理批量删除成功的情况
                     console.log('批量删除成功:', response.data);

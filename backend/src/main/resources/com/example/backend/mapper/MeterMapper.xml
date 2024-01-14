@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.backend.mapper.MeterMapper">
+    <select id="selectMeter" resultType="com.example.backend.pojo.Meter">
+        select  m.meter_id,m.meter_type,m.meter_value,m.personnel,m.update_time
+        from meter as m
+        <where>
+            <if test="meterType != null and meterType !=''">
+                m.meter_type like concat('%',#{meterType},'%')
+            </if>
+        </where>
+    </select>
+
+    <select id="selectMyMeter" resultType="com.example.backend.pojo.Meter">
+        select  m.meter_id,m.meter_type,m.meter_value,m.personnel,m.update_time
+        from meter as m
+        <where>
+            <if test="personnel != null and personnel !=''">
+                m.personnel like concat('%',#{personnel},'%')
+            </if>
+        </where>
+    </select>
+
+    <insert id="insertmeter" useGeneratedKeys="true" keyProperty="meterId">
+        insert into meter(meter_type,meter_value,create_time,update_time)
+            values (#{meterType},#{meterValue},
+                    #{createTime},#{updateTime})
+    </insert>
+</mapper>
