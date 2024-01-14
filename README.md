@@ -23,7 +23,7 @@ npm run serve
 
 在IDEA中运行项目启动后端
 
-由于后端项目部署在本地，在实现住户付费功能时，由于支付宝服务器在支付成功后无法访问本地机器内网的回调URL，因此需要使用内网穿透工具（https://natapp.cn/）实现外网访问，需要将 `application.properties` 文件中的 `alipay.notifyUrl` 内容修改为内网穿透工具生成的外网访问连接
+由于后端项目部署在本地，在实现住户付费功能时，由于支付宝服务器在支付成功后无法访问本地机器内网的回调URL，因此需要使用内网穿透工具（https://natapp.cn/） 实现外网访问，需要将 `application.properties` 文件中的 `alipay.notifyUrl` 内容修改为内网穿透工具生成的外网访问连接
 
 ## 数据库
 
